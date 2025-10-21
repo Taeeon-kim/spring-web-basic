@@ -25,10 +25,17 @@ public class BookController {
        }
      */
 
-    @RequestMapping(value ="/api/books", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/books", method = RequestMethod.POST)
 //    @PostMapping("/api/books")
     public BookResponseDto createBook(@Valid @RequestBody BookCreateRequestDto requestDto) {
         Book book = bookService.createBook(requestDto);
+        return BookResponseDto.from(book);
+    }
+
+    @RequestMapping(value = "/api/books/{id}", method = RequestMethod.GET)
+    public BookResponseDto getBook(@PathVariable Long id) {
+
+        Book book = bookService.getBook(id);
         return BookResponseDto.from(book);
     }
 

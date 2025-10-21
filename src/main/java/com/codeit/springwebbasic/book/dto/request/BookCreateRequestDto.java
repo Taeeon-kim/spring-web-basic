@@ -1,6 +1,8 @@
 package com.codeit.springwebbasic.book.dto.request;
 
 
+import com.codeit.springwebbasic.book.entity.Book;
+import com.codeit.springwebbasic.book.entity.BookStatus;
 import jakarta.validation.constraints.*;
 
 import lombok.Getter;
@@ -43,5 +45,16 @@ public class BookCreateRequestDto {
     @PastOrPresent(message = "출판일은 과거 또는 현재여야 합니다.")
     private LocalDate publishedDate;
 
+
+    public Book toEntity() {
+        return Book.builder()
+                .title(title)
+                .author(author)
+                .isbn(isbn)
+                .publisher(publisher)
+                .publishedDate(publishedDate)
+                .status(BookStatus.AVAILABLE) // 기본값 설정 가능
+                .build();
+    }
 
 }

@@ -23,18 +23,16 @@ public class BookService {
             throw new IllegalArgumentException("Book with ISBN " + requestDto.getIsbn() + " already exists");
         }
 
-        Book build = Book.builder()
-                .title(requestDto.getTitle())
-                .author(requestDto.getAuthor())
-                .author(requestDto.getAuthor())
-                .isbn(requestDto.getIsbn())
-                .publisher(requestDto.getPublisher())
-                .publishedDate(requestDto.getPublishedDate())
-                .status(BookStatus.AVAILABLE)
-                .build();
+        Book build = requestDto.toEntity();
         System.out.println("build = " + build);
 
-       return bookRepository.save(build);
+        return bookRepository.save(build);
 
+    }
+
+    public Book getBook(Long id) {
+        return bookRepository
+                .findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Book not found"));
     }
 }
