@@ -15,7 +15,7 @@ public class BookService {
 
     private final BookRepository bookRepository;
 
-    public void createBook(BookCreateRequestDto requestDto) {
+    public Book createBook(BookCreateRequestDto requestDto) {
 
         // ISBN 중복체크
         Optional<Book> byIsbn = bookRepository.findByIsbn(requestDto.getIsbn());
@@ -34,7 +34,7 @@ public class BookService {
                 .build();
         System.out.println("build = " + build);
 
-        bookRepository.save(build);
+       return bookRepository.save(build);
 
     }
 }
