@@ -3,9 +3,15 @@ package com.codeit.springwebbasic.common.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestControllerAdvice
 public class CommonExceptionHandler {
@@ -34,11 +40,29 @@ public class CommonExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handle(MethodArgumentNotValidException ex) {
-        String msg = ex.getBindingResult().getFieldErrors().stream()
-                .map(fieldError -> fieldError.getDefaultMessage())   // @Pattern(message=...) 등에서 지정한 메시지
-                .findFirst()
-                .orElse("잘못된 요청입니다.");
-        return ResponseEntity.badRequest().body(msg);
+    public ResponseEntity<Map<String, String>> handle(MethodArgumentNotValidException e) {
+        // 1. 오류 결과를 담을 Map을 생성 (key: 필드명, value: 에러 메세지)
+        Map<String, String> errors = new HashMap<>();
+
+//        // BindingResult : 오류 결과 보고서
+//        BindingResult bindingResult = e.getBindingResult();
+//
+//        // BindingResult에서 @Valid에 실패한 필드 목록을 불러옴
+//        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+//
+//        for (FieldError fieldError : fieldErrors) {
+//            String field = fieldError.getField();
+//            String message = fieldError.getDefaultMessage();
+//            errors.put(field, message);
+//        }
+
+        e.getBindingResult().getFieldErrors().stream()
+                .forEach(fieldError -> {
+                    String field = fieldError.getField();
+                    String message = fieldError.getDefaultMessage();
+                    errors.put(field, message);
+                });
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 }
