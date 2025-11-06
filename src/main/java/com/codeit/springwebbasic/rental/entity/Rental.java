@@ -2,12 +2,19 @@ package com.codeit.springwebbasic.rental.entity;
 
 import com.codeit.springwebbasic.book.entity.Book;
 import com.codeit.springwebbasic.member.entity.Member;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Rental {
 
-    Long id;
+    private Long id;
     private Member member;
     private Book book;
     private LocalDateTime rentedAt;
