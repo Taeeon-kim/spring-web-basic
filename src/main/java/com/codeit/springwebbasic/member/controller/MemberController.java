@@ -5,6 +5,12 @@ import com.codeit.springwebbasic.member.dto.request.MemberCreateRequestDto;
 import com.codeit.springwebbasic.member.dto.response.MemberResponseDto;
 import com.codeit.springwebbasic.member.entity.Member;
 import com.codeit.springwebbasic.member.service.MemberService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +26,7 @@ import java.util.List;
 @RequestMapping("/api/v1/members")
 @RequiredArgsConstructor
 @Slf4j // log라는 이름의 Logger 객체를 바로 생성
-public class MemberController {
+public class MemberController implements MemberControllerDocs {
 
     private final MemberService memberService;
 
@@ -29,8 +35,12 @@ public class MemberController {
     // url: /api/members: POST
     // 데이터: name: string(필수), email: string(필수), phone: string(필수, 전번 형식 검삭 필요)
     // 요청 DTO: MemberCreateRequestDto
+
     @PostMapping
-    public ResponseEntity<ApiResponse<MemberResponseDto>> createMember(@Valid @RequestBody MemberCreateRequestDto requestDto) {
+    public ResponseEntity<ApiResponse<MemberResponseDto>> createMember(
+            @Parameter(description = "회원 가입 정보", required = true)
+            @Valid @RequestBody MemberCreateRequestDto requestDto
+    ) {
         log.info("/api/v1/members: POST, dto: {}", requestDto);
 
         MemberResponseDto responseDto = memberService.createMember(requestDto);

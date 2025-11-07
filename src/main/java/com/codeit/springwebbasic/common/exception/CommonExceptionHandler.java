@@ -1,6 +1,7 @@
 package com.codeit.springwebbasic.common.exception;
 
 import com.codeit.springwebbasic.common.dto.ApiResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestControllerAdvice
+@Slf4j
 public class CommonExceptionHandler {
 
     // Controller 단에서 발생하는 모든 예외를 일괄 처리하는 클래스
@@ -22,7 +24,8 @@ public class CommonExceptionHandler {
     // 메서드를 호출한 상위 계층으로 전파된다.
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiResponse<Object>> illegalArgsHandler(IllegalArgumentException e) {
-        e.printStackTrace();
+        // log.error를 사용해서 예외 객체를 전달하면 스택 트레이스를 모두 찍어 준다.
+        log.error(e.getMessage(), e);
         // 예외의 원인을 http 상태 코드와 메세지를 통해 알려주고싶다. -> ResponseEntity
         ApiResponse<Object> response = ApiResponse.error("ILLEGAL_ARGS", e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -30,7 +33,7 @@ public class CommonExceptionHandler {
 
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<ApiResponse<Object>> illegalStateHandler(IllegalStateException e) {
-        e.printStackTrace();
+        log.error(e.getMessage(), e);
         ApiResponse<Object> response = ApiResponse.error("ILLEGA_STATE", e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
