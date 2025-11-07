@@ -4,36 +4,36 @@ import com.codeit.springwebbasic.member.entity.Member;
 import com.codeit.springwebbasic.member.entity.MemberGrade;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-
-
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Getter
-@NoArgsConstructor
-public class MemberCreateRequestDto {
+// record: java 16+, 불변 데이터 운반 객체를 아주 간결하게 작성할 수 있음
+// getter는 기본 제공되는데, 이름에 get이 붙지 않습니다.
+// Lombok의 builder 사용 가능 (목적에 맞게 사용해야한다.)
+public record MemberCreateRequestDto(
+        Long id,
+        @NotBlank(message = "이름은 필수입니다.")
+        String name,
+        @NotBlank(message = "이메일은 필수입니다.")
+        @Email(message ="올바른 이메일 형식이 아닙니다.")
+        String email,
+        @NotBlank(message ="전화번호는 필수입니다")
+        String phone,
+        MemberGrade grade,
+        LocalDateTime joinedAt
+) {
 
-    @NotBlank
-    private String name;
-    @NotBlank
-    @Email
-    private String email;
-    @NotBlank
-    @Pattern(regexp = "^(?:\\+82[-\\s]?10|010)(?:\\d{8}|(?:([-\\s])\\d{4}\\1\\d{4}))$", message = "전화번호 형식이 올바르지 않습니다.")
-    private String phone;
-
-
-    public Member toEntity() {
+    public Member toEntity(){
         return Member.builder()
-                .name(name)
-                .email(email)
-                .phone(phone)
-                .grade(MemberGrade.BRONZE)
                 .joinedAt(LocalDateTime.now())
+                .phone(this.phone)
+                .grade(this.grade)
+                .email(this.email)
+                .id(this.id)
+                .name(this.name)
                 .build();
     }
 
 }
+
+

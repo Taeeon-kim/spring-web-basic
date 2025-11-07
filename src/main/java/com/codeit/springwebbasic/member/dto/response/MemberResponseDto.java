@@ -5,6 +5,8 @@ import com.codeit.springwebbasic.member.entity.MemberGrade;
 import lombok.Builder;
 import lombok.Getter;
 
+
+
 @Getter
 @Builder
 public class MemberResponseDto {
