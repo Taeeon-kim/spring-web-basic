@@ -41,7 +41,7 @@ public class MemberController implements MemberControllerDocs {
             @Parameter(description = "회원 가입 정보", required = true)
             @Valid @RequestBody MemberCreateRequestDto requestDto
     ) {
-        log.info("/api/v1/members: POST, dto: {}", requestDto);
+        log.info("/api/v1/members: POST, dto: {}", requestDto); // 로깅 횡단관심사
 
         MemberResponseDto responseDto = memberService.createMember(requestDto);
 
@@ -51,6 +51,7 @@ public class MemberController implements MemberControllerDocs {
 
     @GetMapping("/{id}")
     public MemberResponseDto findMemberById(@PathVariable Long id) {
+        log.info("/api/v1/members/{}: GET", id);
         return memberService.getMember(id);
     }
 
